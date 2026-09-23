@@ -143,7 +143,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           <div>
             <div className="text-xs uppercase tracking-wider text-emerald-400 font-mono">Australian Business Onboarding</div>
             <h2 className="text-lg font-semibold text-white">
-              {step === 1 && 'Welcome to creatorledger'}
+              {step === 1 && 'Welcome to fleshsesh'}
               {step === 2 && 'Step 1: ABN Identity Gate'}
               {step === 3 && 'Step 2: Australian Tax Profile'}
               {step === 4 && 'Step 3: Operating Profile'}
@@ -189,9 +189,9 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           {step === 1 && (
             <div className="space-y-4">
               <div className="p-4 rounded-xl bg-neutral-800/40 border border-neutral-700/60">
-                <h3 className="text-base font-semibold text-white mb-2">Run the business behind your influence.</h3>
+                <h3 className="text-base font-semibold text-white mb-2">Run your business with confidence.</h3>
                 <p className="text-neutral-300 leading-relaxed">
-                  creatorledger is an ABN-gated operating system built specifically for Australian creators, influencers, performers, and digital businesses.
+                  fleshsesh gives Australian sole traders one clear place to track income, set aside the right amount for tax, manage expenses, and stay on top of compliance.
                 </p>
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div className="p-3 rounded-lg bg-neutral-900 border border-neutral-800">
@@ -486,7 +486,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           {step === 5 && (
             <div className="space-y-4">
               <p className="text-xs text-neutral-400">
-                creatorledger separates operating funds from tax escrow to protect creators from surprise tax liabilities:
+                fleshsesh separates operating funds from tax escrow to protect creators from surprise tax liabilities:
               </p>
 
               <div className="space-y-3">
@@ -540,7 +540,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   Business Compliance Map Generated
                 </div>
                 <p className="text-xs text-neutral-300 leading-relaxed">
-                  Based on your ABN profile ({formData.abn}) and entity structure ({formData.entityType === 'company' ? 'Proprietary Company' : 'Sole Trader'}), creatorledger has activated your Australian compliance radar.
+                  Based on your ABN profile ({formData.abn}) and entity structure ({formData.entityType === 'company' ? 'Proprietary Company' : 'Sole Trader'}), fleshsesh has activated your Australian compliance radar.
                 </p>
               </div>
 

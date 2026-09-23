@@ -1,4 +1,5 @@
 import express from 'express';
+import { createServer as createHttpServer } from 'http';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -220,10 +221,23 @@ function generateSmartFallback(query: string, context?: any): string {
 
 // Dev vs Prod Vite mounting
 async function startServer() {
+  const httpServer = createHttpServer(app);
+
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
-      server: { middlewareMode: true, hmr: process.env.DISABLE_HMR !== 'true' },
+      server: {
+        middlewareMode: true,
+        // This custom Express server is not exposed as a Vite WebSocket endpoint in the preview proxy.
+        // Disable Vite HMR so the injected client does not repeatedly connect and close.
+        hmr: false,
+      },
       appType: 'spa',
+    });
+
+    // Vite can still serve a cached client module after HMR is disabled. Returning an
+    // empty module makes the preview safe even when an older HTML response references it.
+    app.use('/@vite/client', (_req, res) => {
+      res.type('application/javascript').send('');
     });
     app.use(vite.middlewares);
   } else {
@@ -234,7 +248,7 @@ async function startServer() {
   }
 
   const serverPort = Number(process.env.PORT) || 3000;
-  app.listen(serverPort, '0.0.0.0', () => {
+  httpServer.listen(serverPort, '0.0.0.0', () => {
     console.log(`creatorledger server running on http://0.0.0.0:${serverPort}`);
   });
 }

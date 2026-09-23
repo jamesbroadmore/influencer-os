@@ -127,7 +127,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <div>
               <h2 className="text-base font-semibold text-white">System Settings & Preferences</h2>
               <p className="text-xs text-neutral-400">
-                Personalize your creatorledger workspace, theme, notifications, and cloud identity
+                Personalize your fleshsesh workspace, theme, notifications, and cloud identity
               </p>
             </div>
           </div>

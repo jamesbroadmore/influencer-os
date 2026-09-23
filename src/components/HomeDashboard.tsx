@@ -117,7 +117,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
             Good day, {creator.creatorHandle.replace('@', '')}.
           </h1>
           <p className="text-xs text-neutral-400 mt-0.5">
-            Your influence is an enterprise. Your accounts and compliance radar are current as of today.
+            Know what is yours, what is set aside, and what needs doing next — without the admin headache.
           </p>
         </div>
 
