@@ -1,0 +1,7 @@
+{
+  "name": "creatorledger",
+  "description": "Australian Creator Business Operating System. ABN-gated business identity, bookings CRM, double-entry bookkeeping, GST & BAS workspace, and ABR/ASIC/ATO compliance engine.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

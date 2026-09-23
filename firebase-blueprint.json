@@ -1,0 +1,97 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Creator user account, theme settings, notification preferences, and business identity",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Firebase Authentication UID"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User email address"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Creator display name or brand handle"
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Profile picture URL"
+        },
+        "themePreference": {
+          "type": "string",
+          "enum": ["dark", "light", "system"],
+          "description": "UI appearance mode"
+        },
+        "notificationPreferences": {
+          "type": "object",
+          "description": "Settings for Australian tax, BAS, and deal reminders"
+        },
+        "businessIdentity": {
+          "type": "object",
+          "description": "Registered ABN, legal entity type, and trading name"
+        },
+        "taxProfile": {
+          "type": "object",
+          "description": "GST registration, PAYG, and superannuation status"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Account creation ISO timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last updated ISO timestamp"
+        }
+      },
+      "required": ["id", "email"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Conversation message turn with AI assistant Lex",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique message ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "User UID who owns this conversation"
+        },
+        "sender": {
+          "type": "string",
+          "enum": ["user", "lex"],
+          "description": "Sender identifier"
+        },
+        "text": {
+          "type": "string",
+          "description": "Message content"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp formatted string"
+        },
+        "sources": {
+          "type": "array",
+          "description": "Google Search Grounding sources and citations"
+        }
+      },
+      "required": ["id", "userId", "sender", "text", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Private user account, theme settings, notifications, and profile"
+    },
+    "/users/{userId}/chat_messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Persisted interaction history with Lex AI advisor"
+    }
+  }
+}
