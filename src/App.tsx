@@ -279,7 +279,7 @@ function AppContent() {
       )}
 
       {/* Top Application Bar */}
-      <header className="sticky top-0 z-40 h-14 bg-neutral-950/85 backdrop-blur-md border-b border-neutral-800/80 px-4 flex items-center justify-between">
+      <header className="sticky top-0 z-40 h-16 bg-[#07100f]/70 backdrop-blur-2xl border-b border-white/[0.08] px-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -290,7 +290,7 @@ function AppContent() {
           </button>
 
           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => setActiveTab('dashboard')}>
-            <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center font-bold text-white text-xs shadow-md shadow-emerald-600/30 font-display">
+            <div className="size-8 rounded-xl bg-gradient-to-br from-emerald-300 via-emerald-500 to-teal-700 flex items-center justify-center font-bold text-[#06100e] text-xs shadow-lg shadow-emerald-500/25 font-display ring-1 ring-white/20">
               CL
             </div>
             <div>
@@ -374,7 +374,7 @@ function AppContent() {
       {/* Main Layout Body */}
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar Navigation (Desktop) */}
-        <aside className="hidden md:flex w-64 flex-col justify-between border-r border-neutral-800/80 bg-neutral-950/60 p-4 shrink-0">
+        <aside className="hidden md:flex w-64 flex-col justify-between border-r border-white/[0.07] bg-[#07100f]/45 backdrop-blur-xl p-4 shrink-0">
           <nav className="space-y-1">
             <div className="px-3 pb-2 text-[10px] font-mono text-neutral-500 uppercase tracking-wider">
               Australian Operations
@@ -536,7 +536,7 @@ function AppContent() {
         )}
 
         {/* View Routing & Dynamic View Display */}
-        <main className="flex-1 overflow-y-auto bg-neutral-950 p-4 sm:p-6 lg:p-8">
+        <main className="relative flex-1 overflow-y-auto bg-[#050b0a] p-4 sm:p-6 lg:p-8 before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_72%_0%,rgba(16,185,129,0.10),transparent_31%),radial-gradient(circle_at_15%_20%,rgba(45,212,191,0.055),transparent_26%)] before:content-['']"><div className="relative">
           {activeTab === 'dashboard' && (
             <HomeDashboard
               business={business}
@@ -640,7 +640,7 @@ function AppContent() {
               onPostAdjustmentJournal={(entry) => setJournalEntries(prev => [entry, ...prev])}
             />
           )}
-        </main>
+        </div></main>
       </div>
 
       {/* AI Assistant Drawer - Lex */}
