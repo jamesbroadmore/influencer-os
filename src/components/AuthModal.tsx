@@ -98,7 +98,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
             <div>
               <h2 className="text-base font-semibold text-white">
-                {mode === 'signin' ? 'Sign in to creatorledger' : 'Create Creator Account'}
+                {mode === 'signin' ? 'Sign in to fleshsesh' : 'Create Creator Account'}
               </h2>
               <p className="text-[11px] text-neutral-400">
                 Secure Australian business cloud identity

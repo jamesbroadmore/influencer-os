@@ -290,15 +290,15 @@ function AppContent() {
           </button>
 
           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => setActiveTab('dashboard')}>
-            <div className="size-8 rounded-xl bg-gradient-to-br from-emerald-300 via-emerald-500 to-teal-700 flex items-center justify-center font-bold text-[#06100e] text-xs shadow-lg shadow-emerald-500/25 font-display ring-1 ring-white/20">
-              CL
+            <div className="size-8 rounded-xl bg-gradient-to-br from-[#ffd1c1] via-[#f48fb1] to-[#8f506f] flex items-center justify-center font-bold text-[#281d2c] text-xs shadow-lg shadow-[#f48fb1]/25 font-display ring-1 ring-white/20">
+              FS
             </div>
             <div>
               <span className="font-bold text-white text-sm tracking-tight font-display">
-                creatorledger
+                fleshsesh
               </span>
               <span className="text-[10px] text-emerald-400 font-mono ml-2 hidden sm:inline-block">
-                Sole trader finance OS
+                business, sorted
               </span>
             </div>
           </div>
@@ -467,7 +467,7 @@ function AppContent() {
                   <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center font-bold text-white text-sm">
                     CL
                   </div>
-                  <span className="font-bold text-white text-base">creatorledger</span>
+                  <span className="font-bold text-white text-base">fleshsesh</span>
                 </div>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
