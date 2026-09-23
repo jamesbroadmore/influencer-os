@@ -298,7 +298,7 @@ function AppContent() {
                 creatorledger
               </span>
               <span className="text-[10px] text-emerald-400 font-mono ml-2 hidden sm:inline-block">
-                AU Enterprise OS
+                Sole trader finance OS
               </span>
             </div>
           </div>

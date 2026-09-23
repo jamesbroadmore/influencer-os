@@ -189,9 +189,9 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           {step === 1 && (
             <div className="space-y-4">
               <div className="p-4 rounded-xl bg-neutral-800/40 border border-neutral-700/60">
-                <h3 className="text-base font-semibold text-white mb-2">Run the business behind your influence.</h3>
+                <h3 className="text-base font-semibold text-white mb-2">Run your business with confidence.</h3>
                 <p className="text-neutral-300 leading-relaxed">
-                  creatorledger is an ABN-gated operating system built specifically for Australian creators, influencers, performers, and digital businesses.
+                  creatorledger gives Australian sole traders one clear place to track income, set aside the right amount for tax, manage expenses, and stay on top of compliance.
                 </p>
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div className="p-3 rounded-lg bg-neutral-900 border border-neutral-800">
