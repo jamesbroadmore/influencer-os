@@ -227,7 +227,9 @@ async function startServer() {
     const vite = await createViteServer({
       server: {
         middlewareMode: true,
-        hmr: process.env.DISABLE_HMR !== 'true' ? { server: httpServer } : false,
+        // This custom Express server is not exposed as a Vite WebSocket endpoint in the preview proxy.
+        // Disable Vite HMR so the injected client does not repeatedly connect and close.
+        hmr: false,
       },
       appType: 'spa',
     });
