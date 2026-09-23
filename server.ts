@@ -1,4 +1,5 @@
 import express from 'express';
+import { createServer as createHttpServer } from 'http';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -220,9 +221,14 @@ function generateSmartFallback(query: string, context?: any): string {
 
 // Dev vs Prod Vite mounting
 async function startServer() {
+  const httpServer = createHttpServer(app);
+
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
-      server: { middlewareMode: true, hmr: process.env.DISABLE_HMR !== 'true' },
+      server: {
+        middlewareMode: true,
+        hmr: process.env.DISABLE_HMR !== 'true' ? { server: httpServer } : false,
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -234,7 +240,7 @@ async function startServer() {
   }
 
   const serverPort = Number(process.env.PORT) || 3000;
-  app.listen(serverPort, '0.0.0.0', () => {
+  httpServer.listen(serverPort, '0.0.0.0', () => {
     console.log(`creatorledger server running on http://0.0.0.0:${serverPort}`);
   });
 }
