@@ -63,8 +63,49 @@ import {
   RefreshCw,
   Settings,
   LogIn,
-  CheckCircle2
+  CheckCircle2,
+  ArrowRight
 } from 'lucide-react';
+
+function TalentLanding({ onCreateAccount }: { onCreateAccount: () => void }) {
+  const steps = [
+    ['01', 'Sign up', 'Create your talent profile in a minute.'],
+    ['02', 'Get guided', 'Lex explains the important bits as you go.'],
+    ['03', 'Stay on top', 'See what matters without the spreadsheet headache.'],
+  ];
+
+  return (
+    <main className="talent-landing min-h-screen bg-[#f5f6fb] text-[#101119] antialiased">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1152px] items-center px-6 py-16 sm:px-10 lg:px-0">
+        <div className="grid w-full items-center gap-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+          <section>
+            <div className="mb-12 flex items-center gap-3 sm:mb-16">
+              <div className="text-[40px] font-black leading-none tracking-[-0.08em]">Talent<span className="landing-gradient-text">OS</span></div>
+              <div className="h-10 w-px bg-[#c9cad3]" />
+              <div className="text-[16px] font-bold leading-[1.05] text-[#7137c7]">business,<br />sorted</div>
+            </div>
+            <p className="mb-7 text-[13px] font-bold uppercase tracking-[0.2em] text-[#7137c7]">For independent talent</p>
+            <h1 className="max-w-[570px] text-[52px] font-semibold leading-[0.99] tracking-[-0.055em] sm:text-[62px]">Spend less time chasing the business stuff.</h1>
+            <p className="mt-8 max-w-[560px] text-[17px] leading-7 text-[#5b5d68]">Keep your work, money, invoices, and tax tasks in one simple place. Sign up, then let Lex walk you through the setup.</p>
+            <div className="mt-9 flex flex-wrap items-center gap-3">
+              <button onClick={onCreateAccount} className="landing-button inline-flex items-center gap-5 rounded-xl bg-[#7629d4] px-5 py-3.5 text-[13px] font-bold text-white shadow-[0_14px_24px_rgba(118,41,212,0.22)] transition hover:-translate-y-0.5 hover:bg-[#6820c0]">Create your account <ArrowRight className="h-4 w-4" /></button>
+              <span className="text-[12px] text-[#696b75]">Free to get started · made for first-timers</span>
+            </div>
+          </section>
+          <section aria-label="How TalentOS works" className="space-y-3">
+            {steps.map(([number, title, description]) => (
+              <article key={number} className="landing-card rounded-2xl border border-[#e5e5eb] bg-white px-5 py-6 shadow-[0_16px_30px_rgba(32,35,57,0.08)] sm:px-5 sm:py-7">
+                <div className="font-mono text-[12px] font-bold text-[#7137c7]">{number}</div>
+                <h2 className="mt-6 text-[17px] font-bold tracking-[-0.02em]">{title}</h2>
+                <p className="mt-2 text-[13px] leading-5 text-[#61636e]">{description}</p>
+              </article>
+            ))}
+          </section>
+        </div>
+      </div>
+    </main>
+  );
+}
 
 function AppContent() {
   const { user, userProfile, theme, saveBusinessIdentity } = useAuth();
@@ -79,6 +120,11 @@ function AppContent() {
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [showLanding, setShowLanding] = useState(true);
+
+  if (showLanding) {
+    return <TalentLanding onCreateAccount={() => setShowLanding(false)} />;
+  }
 
   // Core Data Stores
   const [business, setBusiness] = useState<BusinessIdentity>(SEED_BUSINESS);

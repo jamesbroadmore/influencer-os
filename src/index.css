@@ -59,6 +59,26 @@
 ::-webkit-scrollbar-thumb { background: rgba(255, 225, 227, 0.14); border-radius: 9999px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255, 225, 227, 0.26); }
 
+.talent-landing {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.landing-gradient-text {
+  background: linear-gradient(100deg, #234dcc 5%, #d932bd 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.landing-card {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.landing-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 36px rgba(32, 35, 57, 0.12);
+}
+
 .bg-neutral-900, .bg-neutral-900\/90, .bg-neutral-900\/80 {
   background: linear-gradient(145deg, rgba(19, 35, 31, 0.74), rgba(8, 18, 16, 0.72));
   border-color: rgba(255, 255, 255, 0.09);
