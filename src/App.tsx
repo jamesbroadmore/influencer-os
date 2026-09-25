@@ -120,11 +120,6 @@ function AppContent() {
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
-  const [showLanding, setShowLanding] = useState(true);
-
-  if (showLanding) {
-    return <TalentLanding onCreateAccount={() => setShowLanding(false)} />;
-  }
 
   // Core Data Stores
   const [business, setBusiness] = useState<BusinessIdentity>(SEED_BUSINESS);
@@ -717,6 +712,12 @@ function AppContent() {
 }
 
 export default function App() {
+  const [showLanding, setShowLanding] = useState(true);
+
+  if (showLanding) {
+    return <TalentLanding onCreateAccount={() => setShowLanding(false)} />;
+  }
+
   return (
     <AuthProvider>
       <AppContent />

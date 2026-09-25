@@ -6,9 +6,7 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     plugins: [
-      // The hosted preview supplies its own Vite runtime, so React Fast Refresh
-      // must stay off when this app is served through the Express middleware.
-      react({ fastRefresh: false }),
+      react(),
       tailwindcss(),
       {
         name: 'disable-preview-hmr-client',

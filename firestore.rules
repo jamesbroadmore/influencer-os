@@ -37,15 +37,14 @@ service cloud.firestore {
     }
 
     function isValidChatMessage(data) {
-      return data.id is string &&
-        data.id.size() <= 128 &&
-        data.userId is string &&
-        data.userId == request.auth.uid &&
+      return data.keys().hasOnly(['id', 'userId', 'sender', 'text', 'timestamp', 'sources']) &&
+        data.id is string &&
+        data.id.size() > 0 && data.id.size() <= 128 &&
+        data.userId is string && data.userId == request.auth.uid &&
         data.sender in ['user', 'lex'] &&
-        data.text is string &&
-        data.text.size() <= 10000 &&
-        data.timestamp is string &&
-        data.timestamp.size() <= 64;
+        data.text is string && data.text.size() > 0 && data.text.size() <= 10000 &&
+        data.timestamp is string && data.timestamp.size() <= 64 &&
+        (!('sources' in data) || data.sources is list);
     }
 
     // User profile and settings

@@ -181,6 +181,11 @@ export const ReceiptScannerModal: React.FC<ReceiptScannerModalProps> = ({
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 4 * 1024 * 1024) {
+      setCameraError('Please choose a JPG, PNG, or WebP image under 4 MB.');
+      e.target.value = '';
+      return;
+    }
 
     const reader = new FileReader();
     reader.onload = evt => {
@@ -243,22 +248,8 @@ export const ReceiptScannerModal: React.FC<ReceiptScannerModalProps> = ({
       setBusinessUsePct(parsed.suggestedBusinessUsePercentage || 100);
     } catch (err) {
       console.error('Receipt parsing error:', err);
-      // Fallback parse
-      const fallback: ParsedReceiptData = {
-        supplier: 'DigiDirect Sydney',
-        supplierAbn: '68 123 456 789',
-        date: new Date().toISOString().split('T')[0],
-        grossAmount: 349.00,
-        gstAmount: 31.73,
-        netAmount: 317.27,
-        category: 'Equipment & Cameras',
-        description: 'Rode Wireless PRO Dual Microphone System',
-        suggestedBusinessUsePercentage: 100,
-        deductibilityConfidence: 'HIGH',
-        taxNotes: '100% creator production audio equipment. Eligible for full business deduction under ATO guidelines.'
-      };
-      setParsedData(fallback);
-      setBusinessUsePct(100);
+      setParsedData(null);
+      setCameraError('We could not read that receipt. Check the image and try again, or enter the expense manually.');
     } finally {
       setIsAnalyzing(false);
     }
