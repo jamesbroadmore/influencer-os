@@ -294,11 +294,6 @@ async function startServer() {
       appType: 'spa',
     });
 
-    // Vite can still serve a cached client module after HMR is disabled. Returning an
-    // empty module makes the preview safe even when an older HTML response references it.
-    app.use('/@vite/client', (_req, res) => {
-      res.type('application/javascript').send('');
-    });
     app.use(vite.middlewares);
   } else {
     app.use(express.static(path.resolve(__dirname, 'dist')));
