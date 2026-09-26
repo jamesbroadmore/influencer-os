@@ -16,6 +16,14 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json({ limit: '6mb' }));
 
+app.disable('x-powered-by');
+app.use((_req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
+
 const requestBuckets = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 30;
 const RATE_WINDOW_MS = 60_000;
@@ -69,6 +77,9 @@ app.post('/api/gemini/chat', rateLimit, async (req, res) => {
       .slice(-30)
       .map(message => ({ role: message.role, content: cleanText(message.content, 4000) }))
       .filter(message => message.content.length > 0);
+    if (!messages.some(message => message.role === 'user')) {
+      return res.status(400).json({ error: 'At least one user message is required.' });
+    }
     const rawContext = isPlainObject(req.body.creatorContext) ? req.body.creatorContext : {};
     const creatorContext = {
       legalName: cleanText(rawContext.legalName, 120),
@@ -227,9 +238,9 @@ Ensure amounts are strictly numbers (not strings with dollar signs).`;
       data = generateFallbackReceiptParse();
     }
     return res.json(data);
-  } catch (error) {
+    } catch (error) {
     console.error('Error parsing receipt with Gemini:', error);
-    return res.json(generateFallbackReceiptParse());
+    return res.status(502).json({ error: 'Receipt scanning failed. Please enter the expense manually.' });
   }
 });
 

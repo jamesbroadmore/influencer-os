@@ -276,8 +276,8 @@ function AppContent() {
         }
       ],
       subtotal: quote.subtotal,
-      gstTotal: quote.gstAmount,
-      total: quote.total,
+      gstTotal: Math.round(quote.subtotal * (isTaxInvoice ? 0.10 : 0) * 100) / 100,
+      total: quote.subtotal + Math.round(quote.subtotal * (isTaxInvoice ? 0.10 : 0) * 100) / 100,
       status: 'issued',
       notes: `Converted from accepted quote ${quote.quoteNumber}. Usage rights: ${quote.usageRights}`,
       auditTrail: [`Converted from Quote ${quote.quoteNumber}`]
