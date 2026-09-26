@@ -14,7 +14,43 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '6mb' }));
+
+app.disable('x-powered-by');
+app.use((_req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
+
+const requestBuckets = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 30;
+const RATE_WINDOW_MS = 60_000;
+
+function rateLimit(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const forwarded = req.headers['x-forwarded-for'];
+  const ip = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+  const current = requestBuckets.get(ip);
+  if (!current || current.resetAt <= now) {
+    requestBuckets.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    return next();
+  }
+  if (current.count >= RATE_LIMIT) {
+    return res.status(429).json({ error: 'Too many requests. Please try again shortly.' });
+  }
+  current.count += 1;
+  return next();
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function cleanText(value: unknown, maxLength: number) {
+  return typeof value === 'string' ? value.trim().slice(0, maxLength) : '';
+}
 
 // Initialize Google GenAI client
 const apiKey = process.env.GEMINI_API_KEY || '';
@@ -30,9 +66,27 @@ const ai = apiKey
   : null;
 
 // API Route for Lex - AI Influencer & Regulatory Advisor
-app.post('/api/gemini/chat', async (req, res) => {
+app.post('/api/gemini/chat', rateLimit, async (req, res) => {
   try {
-    const { messages = [], creatorContext } = req.body;
+    if (!isPlainObject(req.body)) {
+      return res.status(400).json({ error: 'Invalid request body.' });
+    }
+    const rawMessages = Array.isArray(req.body.messages) ? req.body.messages : [];
+    const messages = rawMessages
+      .filter((message): message is { role: string; content: string } => isPlainObject(message) && (message.role === 'user' || message.role === 'model') && typeof message.content === 'string')
+      .slice(-30)
+      .map(message => ({ role: message.role, content: cleanText(message.content, 4000) }))
+      .filter(message => message.content.length > 0);
+    if (!messages.some(message => message.role === 'user')) {
+      return res.status(400).json({ error: 'At least one user message is required.' });
+    }
+    const rawContext = isPlainObject(req.body.creatorContext) ? req.body.creatorContext : {};
+    const creatorContext = {
+      legalName: cleanText(rawContext.legalName, 120),
+      abn: cleanText(rawContext.abn, 32),
+      entityType: cleanText(rawContext.entityType, 80),
+      gstRegistered: rawContext.gstRegistered === true,
+    };
 
     const systemInstruction = `You are Lex, the official AI business partner and regulatory advisor for Australian digital creators, influencers, YouTubers, streamers, and creative entrepreneurs in creatorledger.
 Your mission is to guide creators through all commercial, financial, operational, and tax issues within the Australian commercial ecosystem (ATO, ASIC, ABR, Fair Work).
@@ -117,17 +171,23 @@ Key Rules & Expertise:
 });
 
 // API Route for Multimodal Receipt & Document OCR Scanning
-app.post('/api/gemini/parse-receipt', async (req, res) => {
+app.post('/api/gemini/parse-receipt', rateLimit, async (req, res) => {
   try {
-    const { imageBase64, mimeType = 'image/jpeg' } = req.body;
-    if (!imageBase64) {
-      return res.status(400).json({ error: 'Missing imageBase64 data' });
+    if (!isPlainObject(req.body) || typeof req.body.imageBase64 !== 'string') {
+      return res.status(400).json({ error: 'Missing imageBase64 data.' });
+    }
+    const mimeType = typeof req.body.mimeType === 'string' && /^image\/(jpeg|png|webp)$/i.test(req.body.mimeType)
+      ? req.body.mimeType.toLowerCase()
+      : 'image/jpeg';
+    const imageBase64 = req.body.imageBase64;
+    const dataUrlMatch = imageBase64.match(/^data:(image\/(?:jpeg|png|webp));base64,([a-z0-9+/=\r\n]+)$/i);
+    const cleanBase64 = dataUrlMatch ? dataUrlMatch[2].replace(/\s/g, '') : imageBase64.replace(/\s/g, '');
+    if (!/^[a-z0-9+/=]+$/i.test(cleanBase64) || cleanBase64.length < 100 || cleanBase64.length > 5_500_000) {
+      return res.status(400).json({ error: 'Invalid or oversized image data.' });
     }
 
-    const cleanBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
-
     if (!ai || !apiKey) {
-      return res.json(generateFallbackReceiptParse());
+      return res.status(503).json({ error: 'Receipt scanning is temporarily unavailable. Enter the expense manually.' });
     }
 
     const prompt = `You are an expert Australian tax and OCR document analysis assistant for content creators.
@@ -178,9 +238,9 @@ Ensure amounts are strictly numbers (not strings with dollar signs).`;
       data = generateFallbackReceiptParse();
     }
     return res.json(data);
-  } catch (error) {
+    } catch (error) {
     console.error('Error parsing receipt with Gemini:', error);
-    return res.json(generateFallbackReceiptParse());
+    return res.status(502).json({ error: 'Receipt scanning failed. Please enter the expense manually.' });
   }
 });
 
